@@ -1,0 +1,26 @@
+img {
+  border-radius: 10%;
+  height: 30em;
+  width: 20em;
+}
+
+.imgActors {
+  border-radius: 10%;
+  height: 15em;
+  width: 10em;
+}
+
+.imgLogoBuscar {
+  height: 1.5em;
+  width: 1.5em;
+  color: #fff;
+}
+
+.imgBuscar{
+  border-radius: 10%;
+  height: 10em;
+  width: 6em;
+}
+
+
+

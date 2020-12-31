@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    
+
+
+</head>
+
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Inicio<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+
+                <form class="form-inline my-2 my-lg-2">
+                    <a href="buscar.html">
+                        <img class="imgLogoBuscar" src="img/search.png"/>
+                    </a>
+                </form>
+
+            </div>
+        </nav>
+    
+        
+        <!--  -->
+        <div class="jumbotron">
+            <div class="container">
+                <div class="form-group row">
+
+                    <div class="from-group col-md-4">
+                        <a id="imagen"></a>
+                    </div>
+
+                    <div class="from-group col-md-8">
+
+                        <h1 class="display-3" id="titulo">titulo</h1>
+                        
+
+                        <div class="container">
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <p id="bio">birthday</p>
+                              </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container">
+                            <div class="row">
+
+                              <div class="col-sm-2">
+                                <p id="birthday">birthday</p>
+                              </div>
+                              <div class="col-sm-2">
+                                <p id="known_for_department">known_for_department</p>
+                              </div>
+                              <div class="col-sm-4">
+                                <p id="place_of_birth">place_of_birth</p>
+                              </div>
+                              <div class="col-sm-4">
+                                <p id="popularity">popularity</p>
+                              </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="container">
+            <div class="row" id="peliculasPorActor">
+            </div>
+        </div>
+
+        <!--  -->
+
+        <footer class="container">
+          <p>&copy; Jean Piere</p>
+        </footer>
+        
+      
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+
+            var id = getParameterByName('idActor');
+            getActor(id);
+            getMoviesForActor(id);
+
+        });
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function getActor(id) {
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/person/' + id + '?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
+                    console.log(result);
+                    var html, img, bio, dep, bir, pla;
+
+                    (result.biography == "")
+                    ? bio = 'No se ha creado una biografía para este actor.'
+                    : bio = result.biography;
+
+                    (result.known_for_department == "")
+                    ? dep = '-'
+                    : dep = result.known_for_department;
+
+                    (result.birthday == null)
+                    ? bir = '-'
+                    : bir = result.birthday;
+
+                    (result.place_of_birth == null)
+                    ? pla = '-'
+                    : pla = result.place_of_birth;
+
+                    (result.profile_path == null)
+                    ? img = 'img/no-photos.png'
+                    : img = 'https://image.tmdb.org/t/p/w500'+result.profile_path;
+
+                    html = '<img class="img" src="' + img + '">';
+                    $("#imagen").html(html);
+       
+                    $("#titulo").html(result.name);
+                    $("#bio").html(bio);
+                    $("#birthday").html(bir);
+                    $("#known_for_department").html(dep);
+                    $("#place_of_birth").html(pla);
+                    $("#popularity").html('Popularidad '+result.popularity);
+                }
+            });
+        }
+
+
+        // function getMoviesForActor(id) {
+        //     $.ajax({
+
+        //         url: 'https://api.themoviedb.org/3/person/' + id + '/movie_credits?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(result, status, xhr) {
+
+                    
+        //             // var img;
+        //             // var bio;
+
+        //             // (result.biography == "")
+        //             // ? bio = 'No se ha creado una biografía para este actor.'
+        //             // : bio = result.biography;
+
+        //             // for (let items of Object.keys(result)) {
+        //             //     var actors = result[items];
+        //             // }
+
+        //             for (let item of results) {
+
+        //                 var img;
+        //                 var html;
+                        
+        //                 // (item.profile_path == null)
+        //                 // ? img = 'img/no-photos.png'
+        //                 // : img = 'https://image.tmdb.org/t/p/w500'+item.profile_path;
+
+        //                 html += '<div class="col-md-2">';
+        //                 // html += '<a href="actor.html?idActor=' + item.id + '"><img class="imgActors" src="' + img + '" alt="Card image cap"></a>';
+        //                 html += '<div class="card-body">';
+        //                 html += '<p class="card-text">' + item.title+ '</p>';
+        //                 html += '</div>';
+        //                 html += '</div>';
+        //             }
+
+        //             $('#peliculasPorActor').html(html);
+
+                    
+
+
+        //         }
+        //     });
+        // }
+
+
+    </script>
+</body>
+</html>

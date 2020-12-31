@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    
+
+
+</head>
+
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Inicio<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!--  -->
+        <div class="jumbotron">
+            <div class="container">
+                <div class="form-group">
+                    <input class="form-control input-sm" id="txtBuscar" type="text" placeholder="Buscar titulo">
+                </div>
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="container">
+            <div class="form-group" id="listaBuscador">
+                
+            </div>
+        </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function() {});
+
+      
+
+        $('#txtBuscar').keyup(function(){
+            var query = $(this).val();
+            $.ajax({
+                    url: 'https://api.themoviedb.org/3/search/movie/?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES&query='+query+'',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(result, status, xhr) {
+                        let html = '';
+                        var img;
+
+                        
+                        for (let item of result.results) {
+
+                            
+                            (item.poster_path == null)
+                            ? img = 'img/no-photos.png'
+                            : img = 'https://image.tmdb.org/t/p/w500' + item.poster_path;
+
+                            html += '<div class="mb-12 box-shadow" style="padding: 20px;">';
+                            html += '   <div class="row no-gutters">';
+                            html += '     <div class="col-md-1">';
+                            html += '       <a href="pelicula.html?idPelicula=' + item.id + '"><img class="imgBuscar"  src="'+ img + '" alt="Card image cap" ></a>';
+                            html += '     </div>';
+                            html += '     <div class="col-md-11">';
+                            html += '       <div class="card-body">';
+                            html += '         <h5 class="card-title">'+item.title+'</h5>';
+                            html += '         <p class="card-text"><small class="text-muted">'+item.release_date+'</small></p>';
+                            html += '         <p class="card-text">' + item.overview.substring(0, 200) + '...<a href="pelicula.html?idPelicula=' + item.id + '">Ver mas</a></p>';
+                            html += '       </div>';
+                            html += '     </div>';
+                            html += '   </div>';
+                            html += '</div>';
+                    }
+                        $('#listaBuscador').html(html);
+                },
+            });
+        });
+
+
+
+
+
+    </script>
+</body>
+</html>
+
+
+
+

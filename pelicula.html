@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    
+
+
+</head>
+
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Inicio<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+
+                <form class="form-inline my-2 my-lg-2">
+                    <a href="buscar.html">
+                        <img class="imgLogoBuscar" src="img/search.png"/>
+                    </a>
+                </form>
+
+            </div>
+        </nav>
+    
+        
+        <!--  -->
+        <div class="jumbotron">
+            <div class="container">
+                <div class="form-group row">
+
+                    <div class="from-group col-md-4">
+                        <a id="imagen"></a>
+                    </div>
+
+                    <div class="from-group col-md-8">
+                        <h1 class="display-3" id="titulo">titulo</h1>
+                        <p id="subTitulo">subTitulo</p>
+                        <!-- <p id="vote_average"></p> -->
+
+                        <div class="progress" id="progress">
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="container">
+            <div class="row" id="actores">
+            </div>
+        </div>
+
+        <!--  -->
+
+        <footer class="container">
+          <p>&copy; Jean Piere</p>
+        </footer>
+        
+      
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+
+            var id = getParameterByName('idPelicula');
+            getActors(id);
+            getPelicula(id);
+            // buscarPelicula();
+        });
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function getPelicula(id) {
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/movie/' + id + '?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
+                    console.log(result);
+                    var html;
+                    
+                    var progress = '<div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="'+result.vote_average+'" aria-valuemin="0" aria-valuemax="10">'+result.vote_average+'</div></div>';
+                    // $("#pelicula").html(html);
+                    if (result.belongs_to_collection !== null) {
+                        html = '<img class="img" src="https://image.tmdb.org/t/p/w500' + result.belongs_to_collection.poster_path + '">';
+                        $("#imagen").html(html);
+                    } else {
+                        html = '<img src="https://image.tmdb.org/t/p/w500' + result.poster_path + '">';
+                        $("#imagen").html(html);
+                    }
+                    $("#titulo").html(result.title);
+                    $("#subTitulo").html(result.overview);
+                    $("#progress").html(progress);
+                }
+            });
+        }
+
+        function getActors(id) {
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/movie/' + id + '/credits?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
+                    let html = '';
+
+                    for (let items of Object.keys(result)) {
+                        var actors = result[items];
+                    }
+                    
+                    var m = actors.slice(0,8);
+                    for (let item of m) {
+
+                        var img;
+                        (item.profile_path == null)
+                        ? img = 'img/no-photos.png'
+                        : img = 'https://image.tmdb.org/t/p/w500'+item.profile_path;
+
+                        html += '<div class="col-md-2">';
+                        html += '<a href="actor.html?idActor=' + item.id + '"><img class="imgActors" src="' + img + '" alt="Card image cap"></a>';
+                        html += '<div class="card-body">';
+                        html += '<p class="card-text">' + item.name+ '</p>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    
+                    $('#actores').html(html);
+                
+                },
+                error: function(xhr, status) {
+                    console.log('fallo la solicitud');
+                }
+            })
+        }
+
+
+    </script>
+</body>
+</html>
