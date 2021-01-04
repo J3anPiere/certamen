@@ -158,51 +158,33 @@
         }
 
 
-        // function getMoviesForActor(id) {
-        //     $.ajax({
+        function getMoviesForActor(id) {
+            $.ajax({
 
-        //         url: 'https://api.themoviedb.org/3/person/' + id + '/movie_credits?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
-        //         type: 'GET',
-        //         dataType: 'json',
-        //         success: function(result, status, xhr) {
+                url: 'https://api.themoviedb.org/3/person/' + id + '/movie_credits?api_key=a2206509622d57a6ed7e5526a8bcef32&language=es-ES',
+                type: 'GET',
+                dataType: 'json',
+                success: function(result, status, xhr) {
 
-                    
-        //             // var img;
-        //             // var bio;
-
-        //             // (result.biography == "")
-        //             // ? bio = 'No se ha creado una biografía para este actor.'
-        //             // : bio = result.biography;
-
-        //             // for (let items of Object.keys(result)) {
-        //             //     var actors = result[items];
-        //             // }
-
-        //             for (let item of results) {
-
-        //                 var img;
-        //                 var html;
+                    var img;
+                    var html = '';
+                    for (let item of result.cast) {
                         
-        //                 // (item.profile_path == null)
-        //                 // ? img = 'img/no-photos.png'
-        //                 // : img = 'https://image.tmdb.org/t/p/w500'+item.profile_path;
+                        (item.poster_path == null)
+                        ? img = 'img/no-photos.png'
+                        : img = 'https://image.tmdb.org/t/p/w500'+item.poster_path;
 
-        //                 html += '<div class="col-md-2">';
-        //                 // html += '<a href="actor.html?idActor=' + item.id + '"><img class="imgActors" src="' + img + '" alt="Card image cap"></a>';
-        //                 html += '<div class="card-body">';
-        //                 html += '<p class="card-text">' + item.title+ '</p>';
-        //                 html += '</div>';
-        //                 html += '</div>';
-        //             }
-
-        //             $('#peliculasPorActor').html(html);
-
-                    
-
-
-        //         }
-        //     });
-        // }
+                        html += '<div class="col-md-2">';
+                        html += '<a href="actor.html?idActor=' + item.id + '"><img class="imgActors" src="' + img + '" alt="Card image cap"></a>';
+                        html += '<div class="card-body">';
+                        html += '<p class="card-text">' + item.title+ '</p>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    $('#peliculasPorActor').html(html);
+                }
+            });
+        }
 
 
     </script>

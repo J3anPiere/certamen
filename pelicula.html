@@ -125,12 +125,12 @@
                 success: function(result, status, xhr) {
                     let html = '';
 
-                    for (let items of Object.keys(result)) {
-                        var actors = result[items];
-                    }
+                    // for (let items of Object.keys(result)) {
+                    //     var actors = result[items];
+                    // }
                     
-                    var m = actors.slice(0,8);
-                    for (let item of m) {
+                    // var m = actors.slice(0,8);
+                    for (let item of result.cast) {
 
                         var img;
                         (item.profile_path == null)
